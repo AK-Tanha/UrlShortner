@@ -1,55 +1,53 @@
 import './App.css'
-import { Button } from './components/ui/button'
 import { createBrowserRouter } from 'react-router-dom'
 import AppLayout from './layouts/app-layout'
 import LandingPage from './pages/landing'
+import AuthPage from './pages/auth'
+import NotFoundPage from './pages/not-found'
+import DashboardPage from './pages/dashboard'
+import RedirectLinkPage from './pages/redirect-link'
+import LinkPage from './pages/link'
+import { RouterProvider } from 'react-router-dom'
 
+
+const router = createBrowserRouter([
+
+  {
+    element: <AppLayout/>,
+    children: [
+      {
+        path: '/',
+        element: <LandingPage />
+      },
+      {
+        path: '/auth',
+        element: <AuthPage />
+      },
+      {
+        path: '/not-found',
+        element: <NotFoundPage />
+      },
+      {
+        path: '/dashboard',
+        element: <DashboardPage />
+      },
+      {
+        path: '/:id',
+        element: <RedirectLinkPage />
+      },
+      {
+        path: '/link/:id',
+        element: <LinkPage />
+      }
+
+    ]
+  }
+]
+);
 
 function App() {
-  const router = createBrowserRouter(
-    {
-      element: <AppLayout/>,
-      children: [
-        {
-          path: '/',
-          element: <LandingPage />
-        },
-        {
-          path: '/',
-          element: <LandingPage />
-        },
-        {
-          path: '/',
-          element: <LandingPage />
-        },
-        {
-          path: '/',
-          element: <LandingPage />
-        },
-        {
-          path: '/',
-          element: <LandingPage />
-        },
-        {
-          path: '/',
-          element: <LandingPage />
-        }
-
-      ]
-    }
-  );
-
-
   return (
-    <div className='text-4xl text-amber-400 font-bold border-2 border-black-500'>
-      Bismillah
-
-      <Button variant="default" size="sm">
-        Click me
-      </Button>
-
-    </div>
-
+    <RouterProvider router={router}/>
   )
 }
 
