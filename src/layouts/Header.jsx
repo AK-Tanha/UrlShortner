@@ -1,7 +1,26 @@
-import { Button } from '@/components/ui/button'
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
-import { TextAlignJustify, X } from 'lucide-react';
+import { TextAlignJustify, X, BadgeCheckIcon, CreditCardIcon, BellIcon, LogOutIcon } from 'lucide-react';
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../components/ui/dropdown-menu"
+
+import {
+  Avatar,
+  AvatarBadge,
+  AvatarFallback,
+  AvatarGroup,
+  AvatarGroupCount,
+  AvatarImage,
+} from "@/components/ui/avatar"
+
+import { Separator } from "@/components/ui/separator"
 
 
 
@@ -32,6 +51,7 @@ const Header = () => {
   )
 
   const navigate = useNavigate();
+  const loggedIn = true; // Replace with actual authentication logic
 
   return (
     <>
@@ -47,9 +67,41 @@ const Header = () => {
               </Link>
             </li>
           ))}
-          <Button variant="outline" size="sm" className="ml-4" onClick={() => navigate('/auth')}>
+          {!loggedIn ? (<Button variant="outline" size="sm" className="ml-4" onClick={() => navigate('/auth')}>
             Sign Up
-          </Button>
+          </Button>) : (<DropdownMenu>
+            <DropdownMenuTrigger render={<Button variant="ghost" size="icon" className="rounded-full"><Avatar>
+              <AvatarImage src="https://github.com/shadcn.png" alt="shadcn" />
+              <AvatarFallback>LR</AvatarFallback>
+            </Avatar></Button>} />
+            <DropdownMenuContent align="end" className="w-56 text-white bg-gray-800 border-gray-700">
+              <DropdownMenuGroup>
+                <DropdownMenuItem>
+                  <BadgeCheckIcon />
+                  Account
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <CreditCardIcon />
+                  Billing
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <BellIcon />
+                  Notifications
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <Separator className="bg-gray-600 w-lg" />
+              <DropdownMenuItem>
+                <LogOutIcon />
+                Sign Out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>)}
+
+
+
+
+
+
         </ul>
       </nav>
 
@@ -89,7 +141,7 @@ const Header = () => {
             ))}
 
             {/* CTA Button */}
-            <Button
+            {!loggedIn ? (<Button
               variant="default"
               size="lg"
               className="mt-4 w-full bg-amber-400 text-black hover:bg-amber-300"
@@ -99,12 +151,24 @@ const Header = () => {
               }}
             >
               Sign Up
+            </Button>) : (
+              <Button
+              variant="default"
+              size="lg"
+              className="mt-4 w-full bg-amber-400 text-black hover:bg-amber-300"
+              onClick={()=>(console.log("Logged out"))}
+            >
+           Hello User
             </Button>
+            )}
+
+
           </ul>
         </div>
       </nav>
     </>
   )
 }
+
 
 export default Header
