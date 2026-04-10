@@ -13,42 +13,25 @@ import {
 
 import {
   Avatar,
-  AvatarBadge,
   AvatarFallback,
-  AvatarGroup,
-  AvatarGroupCount,
   AvatarImage,
 } from "@/components/ui/avatar"
 
 import { Separator } from "@/components/ui/separator"
 
+const navitems = [
+  { name: 'Home', href: '/' },
+  { name: 'Dashboard', href: '/dashboard' },
+]
 
+const logo = (
+  <img src="/logo.png" alt="Logo" className="h-12 w-12 rounded-full mr-2" />
+)
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const toggleMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  }
-  const closeMenu = () => {
-    setIsMobileMenuOpen(false);
-  }
-
-  const navitems = [
-    {
-      name: 'Home',
-      href: '/'
-    },
-    {
-      name: 'Dashboard',
-      href: '/dashboard'
-    },
-
-  ];
-
-  const logo = (
-    <img src="/logo.png" alt="Logo" className="h-12 w-12 rounded-full mr-2" />
-  )
+  const toggleMenu = () => setIsMobileMenuOpen((open) => !open);
 
   const navigate = useNavigate();
   const loggedIn = true; // Replace with actual authentication logic
@@ -59,10 +42,10 @@ const Header = () => {
         <Link to="/" className="flex items-center">
           {logo}
         </Link>
-        <ul className="flex space-x-4">
+        <ul className="flex items-center gap-6">
           {navitems.map((item) => (
             <li key={item.href}>
-              <Link to={item.href} className="hover:text-amber-300 active:text-2xl">
+              <Link to={item.href} className="hover:text-amber-300 active:text-amber-300 transition">
                 {item.name}
               </Link>
             </li>
@@ -89,7 +72,7 @@ const Header = () => {
                   Notifications
                 </DropdownMenuItem>
               </DropdownMenuGroup>
-              <Separator className="bg-gray-600 w-lg" />
+              <Separator className="bg-gray-600 w-full" />
               <DropdownMenuItem>
                 <LogOutIcon />
                 Sign Out
@@ -116,6 +99,8 @@ const Header = () => {
 
           <button
             onClick={toggleMenu}
+            aria-controls="mobile-menu"
+            aria-expanded={isMobileMenuOpen}
             className="p-2 rounded-lg hover:bg-white/10 transition"
           >
             {isMobileMenuOpen ? <X size={24} /> : <TextAlignJustify size={24} />}
@@ -124,8 +109,9 @@ const Header = () => {
 
         {/* Dropdown Menu */}
         <div
-          className={`overflow-hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen ? "max-h-100 opacity-100" : "max-h-0 opacity-0"
+          className={`overflow-hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
             }`}
+          id="mobile-menu"
         >
           <ul className="flex flex-col px-6 pb-6 space-y-4">
             {navitems.map((item) => (
