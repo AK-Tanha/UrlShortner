@@ -52,22 +52,22 @@ const LandingPage = () => {
             <h1 className="text-3xl font-bold tracking-tight text-amber-400 sm:text-4xl">Welcome to the Landing Page</h1>
             <h2 className="text-base font-semibold text-gray-300 sm:text-xl">Paste your URL to get started</h2>
             <div className="w-full rounded-3xl bg-slate-900/90 p-4 shadow-lg shadow-black/20">
-            <form onSubmit={handleShortenUrl}>
-              <Field orientation="responsive" className="w-full gap-3 sm:flex-row sm:items-center">
-                <Input
-                  className="w-full rounded-xl border border-slate-700 bg-slate-900/90 px-4 py-3 text-white placeholder:text-slate-500 focus:border-amber-400 focus:ring-amber-400"
-                  type="url"
-                  value={longurl}
-                  onChange={(e) => setLongUrl(e.target.value)}
-                  placeholder="Enter your URL ..." />
-                <Button className="w-full rounded-xl bg-amber-300 px-5 py-3 text-gray-900 transition hover:bg-amber-400 sm:w-auto"
-                  variant="ghost"
-                  type="submit"
-                >
-                  Search
-                </Button>
-              </Field>
-            </form>
+              <form onSubmit={handleShortenUrl}>
+                <Field orientation="responsive" className="w-full gap-3 sm:flex-row sm:items-center">
+                  <Input
+                    className="w-full rounded-xl border border-slate-700 bg-slate-900/90 px-4 py-3 text-white placeholder:text-slate-500 focus:border-amber-400 focus:ring-amber-400"
+                    type="url"
+                    value={longurl}
+                    onChange={(e) => setLongUrl(e.target.value)}
+                    placeholder="Enter your URL ..." />
+                  <Button className="w-full rounded-xl bg-amber-300 px-5 py-3 text-gray-900 transition hover:bg-amber-400 sm:w-auto"
+                    variant="ghost"
+                    type="submit"
+                  >
+                    Search
+                  </Button>
+                </Field>
+              </form>
             </div>
           </div>
         </section>
