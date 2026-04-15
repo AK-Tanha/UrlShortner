@@ -7,11 +7,11 @@ import SignInForm from "@/components/signInForm"
 const AuthPage = () => {
   return (
     <div className='mx-auto'>
-      <h1 className="text-4xl font-bold text-amber-400 text-center pt-5">Welcome to the Auth Page</h1>
+      <h1 className="text-4xl font-bold text-amber-400 text-center pt-5 mb-3">Welcome to the Auth Page</h1>
 
-        <Tabs defaultValue="signup" className="w-100">
+        <Tabs defaultValue="signup" className="w-100 pt-4">
 
-          <TabsList variant="line">
+          <TabsList >
             <TabsTrigger
               value="signup"
             >
