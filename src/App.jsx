@@ -7,6 +7,8 @@ import NotFoundPage from './pages/not-found'
 import DashboardPage from './pages/dashboard'
 import RedirectLinkPage from './pages/redirect-link'
 import LinkPage from './pages/link'
+import ProfilePage from './pages/profile'
+import ProtectedRoute from './components/ProtectedRoute'
 import { RouterProvider } from 'react-router-dom'
 
 
@@ -29,7 +31,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/dashboard',
-        element: <DashboardPage />
+        element: (
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
+        )
       },
       {
         path: '/:id',
@@ -37,7 +43,19 @@ const router = createBrowserRouter([
       },
       {
         path: '/link/:id',
-        element: <LinkPage />
+        element: (
+          <ProtectedRoute>
+            <LinkPage />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: '/profile',
+        element: (
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        )
       }
 
     ]

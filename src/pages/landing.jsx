@@ -10,15 +10,36 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useAuth } from "@/context/AuthContext"
+import { api } from "@/lib/api-client"
 
 const LandingPage = () => {
   const [longurl, setLongUrl] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [shortUrl, setShortUrl] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
-  const handleShortenUrl = (e) => {
+  const { isAuthenticated } = useAuth();
+
+  const handleShortenUrl = async (e) => {
     e.preventDefault();
     if (!longurl) return;
-    // Navigate to the shortened URL page or perform the shortening logic
-    navigate(`/auth?createNew=${longurl}`);
+
+    if (!isAuthenticated) {
+      navigate(`/auth?createNew=${longurl}`);
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+    try {
+      const url = await api.post("/urls", { originalUrl: longurl });
+      setShortUrl(`${window.location.origin}/${url.shortCode}`);
+    } catch (err) {
+      setError(err.message || "Failed to shorten URL");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const items = [
@@ -43,50 +64,75 @@ const LandingPage = () => {
   ]
 
   return (
-    <div className="min-h-screen w-full bg-gray-950 text-white px-4 py-6 sm:px-6 lg:px-8">
-      <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-10">
+    <div className="w-full text-white">
+      <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-8">
 
         {/* search field */}
-        <section className="w-full rounded-4xl border border-white/10 bg-slate-950/70 px-5 py-8 shadow-2xl shadow-black/40 backdrop-blur-xl sm:px-8">
+        <section className="w-full rounded-4xl border border-white/10 bg-gradient-to-br from-slate-900/80 to-slate-950/70 px-5 py-8 shadow-2xl shadow-black/40 ring-1 ring-amber-400/5 backdrop-blur-xl sm:px-8">
           <div className="mx-auto flex w-full max-w-3xl flex-col items-center gap-4 text-center">
-            <h1 className="text-3xl font-bold tracking-tight text-amber-400 sm:text-4xl">Welcome to the Landing Page</h1>
+            <h1 className="bg-gradient-to-r from-amber-300 via-orange-400 to-fuchsia-400 bg-clip-text text-3xl font-bold tracking-tight text-transparent sm:text-4xl">
+              Welcome to the Landing Page
+            </h1>
             <h2 className="text-base font-semibold text-gray-300 sm:text-xl">Paste your URL to get started</h2>
-            <div className="w-full rounded-3xl bg-slate-900/90 p-4 shadow-lg shadow-black/20">
+            <div className="w-full rounded-3xl bg-slate-900/90 p-4 shadow-lg shadow-black/20 ring-1 ring-white/10">
               <form onSubmit={handleShortenUrl}>
                 <Field orientation="responsive" className="w-full gap-3 sm:flex-row sm:items-center">
                   <Input
-                    className="w-full rounded-xl border border-slate-700 bg-slate-900/90 px-4 py-3 text-white placeholder:text-slate-500 focus:border-amber-400 focus:ring-amber-400"
+                    className="w-full rounded-xl border border-slate-700 bg-slate-900/90 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:ring-orange-400"
                     type="url"
                     value={longurl}
                     onChange={(e) => setLongUrl(e.target.value)}
                     placeholder="Enter your URL ..." />
-                  <Button className="w-full rounded-xl bg-amber-300 px-5 py-3 text-gray-900 transition hover:bg-amber-400 sm:w-auto"
+                  <Button className="w-full rounded-xl bg-gradient-to-r from-amber-400 via-orange-400 to-fuchsia-500 px-5 py-3 font-semibold text-gray-950 transition hover:from-amber-300 hover:via-orange-300 hover:to-fuchsia-400 sm:w-auto"
                     variant="ghost"
                     type="submit"
+                    disabled={loading}
                   >
-                    Search
+                    {loading ? "Shortening..." : "Shorten"}
                   </Button>
                 </Field>
               </form>
+              {shortUrl && (
+                <div className="mt-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-center">
+                  <p className="text-xs text-emerald-400">Your short link is ready:</p>
+                  <a
+                    href={shortUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-1 block break-all font-mono text-sm text-emerald-300 hover:underline"
+                  >
+                    {shortUrl}
+                  </a>
+                </div>
+              )}
+              {error && (
+                <p className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-center text-sm text-red-400">
+                  {error}
+                </p>
+              )}
             </div>
           </div>
         </section>
 
         {/* Hero */}
-        <section className="w-full rounded-4xl border border-white/10 bg-slate-950/70 px-5 py-8 shadow-2xl shadow-black/40 backdrop-blur-xl sm:px-8">
+        <section className="w-full rounded-4xl border border-white/10 bg-gradient-to-br from-slate-900/80 to-slate-950/70 px-5 py-8 shadow-2xl shadow-black/40 ring-1 ring-orange-400/5 backdrop-blur-xl sm:px-8">
           <div className="mx-auto flex w-full max-w-4xl flex-col items-center gap-4 text-center">
-            <h2 className="text-2xl font-bold text-amber-400 sm:text-3xl">Why Choose Our URL Shortener?</h2>
+            <h2 className="bg-gradient-to-r from-amber-300 via-orange-400 to-fuchsia-400 bg-clip-text text-2xl font-bold text-transparent sm:text-3xl">
+              Why Choose Our URL Shortener?
+            </h2>
             <p className="text-sm text-gray-300 sm:text-base">
               Our URL shortener provides a simple and efficient way to create shorter, more manageable links for sharing across various platforms.
             </p>
-            <img src="https://picsum.photos/id/180/1200/800" alt="hero" className="h-64 w-full rounded-3xl object-cover shadow-xl shadow-black/20 sm:h-80" />
+            <img src="https://picsum.photos/id/180/1200/800" alt="hero" className="h-64 w-full rounded-3xl object-cover shadow-xl shadow-black/20 ring-1 ring-white/10 sm:h-80" />
           </div>
         </section>
 
         {/* FAQ */}
-        <section className="w-full rounded-4xl border border-white/10 bg-slate-950/70 px-5 py-6 shadow-2xl shadow-black/40 backdrop-blur-xl sm:px-8">
+        <section className="w-full rounded-4xl border border-white/10 bg-gradient-to-br from-slate-900/80 to-slate-950/70 px-5 py-6 shadow-2xl shadow-black/40 ring-1 ring-fuchsia-400/5 backdrop-blur-xl sm:px-8">
           <div className="mx-auto w-full max-w-4xl">
-            <h2 className="mb-4 text-xl font-bold text-amber-400 sm:text-2xl">Frequently Asked Questions</h2>
+            <h2 className="mb-4 bg-gradient-to-r from-amber-300 via-orange-400 to-fuchsia-400 bg-clip-text text-xl font-bold text-transparent sm:text-2xl">
+              Frequently Asked Questions
+            </h2>
             <Accordion multiple className="space-y-2" defaultValue={["notifications"]}>
               {items.map((item) => (
                 <AccordionItem key={item.value} value={item.value} className="overflow-hidden px-4 rounded-3xl border border-gray-700 bg-slate-950/80">

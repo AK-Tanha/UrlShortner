@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
-import { TextAlignJustify, X, BadgeCheckIcon, CreditCardIcon, BellIcon, LogOutIcon } from 'lucide-react';
+import { TextAlignJustify, X, LogOutIcon, LayoutDashboard, UserRoundPen } from 'lucide-react';
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -19,9 +19,16 @@ import {
 
 import { Separator } from "@/components/ui/separator"
 
+import { useAuth } from "@/context/AuthContext"
+
 const navitems = [
   { name: 'Home', href: '/' },
+]
+
+const authedNavitems = [
+  { name: 'Home', href: '/' },
   { name: 'Dashboard', href: '/dashboard' },
+  { name: 'Profile', href: '/profile' },
 ]
 
 const logo = (
@@ -30,57 +37,65 @@ const logo = (
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, isAuthenticated, logout } = useAuth();
 
   const toggleMenu = () => setIsMobileMenuOpen((open) => !open);
 
   const navigate = useNavigate();
-  const loggedIn = true; // Replace with actual authentication logic
+  const loggedIn = isAuthenticated;
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+  };
+
+  const avatarFallback = user?.name
+    ? user.name.split(" ").map((n) => n[0]).join("").toUpperCase()
+    : "U";
+
+  const avatarSrc = user?.avatar
+    ? user.avatar.startsWith('http')
+      ? user.avatar
+      : `${window.location.origin}${user.avatar}`
+    : "";
 
   return (
     <>
-      <nav className="hidden md:flex items-center justify-between border-b border-white/10 px-6 py-4 sm:px-8 lg:px-10">
+      <nav className="hidden md:flex items-center justify-between border-b border-amber-400/20 bg-gradient-to-r from-slate-950/80 via-slate-900/70 to-slate-950/80 px-6 py-4 shadow-[0_8px_30px_-12px_rgba(251,146,60,0.25)] backdrop-blur-xl sm:px-8 lg:px-10">
         <Link to="/" className="flex items-center">
           {logo}
         </Link>
         <ul className="flex items-center gap-6">
-          {navitems.map((item) => (
+          {(loggedIn ? authedNavitems : navitems).map((item) => (
             <li key={item.href}>
-              <Link to={item.href} className="hover:text-amber-300 active:text-amber-300 transition">
+              <Link to={item.href} className="bg-gradient-to-r from-amber-300 via-orange-300 to-fuchsia-300 bg-[length:0%_2px] bg-bottom bg-no-repeat pb-1 font-medium text-slate-200 transition-all duration-300 hover:bg-[length:100%_2px] hover:text-amber-300 active:text-amber-300">
                 {item.name}
               </Link>
             </li>
           ))}
-          {!loggedIn ? (<Button variant="outline" size="sm" className="ml-4" onClick={() => navigate('/auth')}>
-            Sign Up
-          </Button>) : (<DropdownMenu>
-            <DropdownMenuTrigger render={<Button variant="ghost" size="icon" className="rounded-full"><Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="shadcn" />
-              <AvatarFallback>LR</AvatarFallback>
+          {!loggedIn ? (<Button size="sm" className="ml-4 bg-gradient-to-r from-amber-400 via-orange-400 to-fuchsia-500 font-semibold text-gray-950 hover:from-amber-300 hover:via-orange-300 hover:to-fuchsia-400" onClick={() => navigate('/auth')}>
+            Sign In
+          </Button>) : (<DropdownMenu>            <DropdownMenuTrigger render={<Button variant="ghost" size="icon" className="rounded-full"><Avatar>
+              <AvatarImage src={avatarSrc} alt={user?.name || "User"} />
+              <AvatarFallback>{avatarFallback}</AvatarFallback>
             </Avatar></Button>} />
-            <DropdownMenuContent align="end" className="w-56 text-white bg-gray-800 border-gray-700">
+            <DropdownMenuContent align="end" className="w-56 border-amber-400/20 bg-gradient-to-b from-slate-900 to-slate-950 text-white">
               <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <BadgeCheckIcon />
-                  Account
+                <DropdownMenuItem render={<Link to="/dashboard" />}>
+                  <LayoutDashboard />
+                  Dashboard
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <CreditCardIcon />
-                  Billing
+                <DropdownMenuItem render={<Link to="/profile" />}>
+                  <UserRoundPen />
+                  Profile
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <BellIcon />
-                  Notifications
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOutIcon />
+                  Sign Out
                 </DropdownMenuItem>
               </DropdownMenuGroup>
-              <Separator className="bg-gray-600 w-full" />
-              <DropdownMenuItem>
-                <LogOutIcon />
-                Sign Out
-              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>)}
-
-
 
 
 
@@ -89,7 +104,7 @@ const Header = () => {
       </nav>
 
       {/* Mobile Navbar */}
-      <nav className="md:hidden border-b border-white/10 bg-black/80 backdrop-blur-lg sticky top-0 z-50">
+      <nav className="md:hidden border-b border-amber-400/20 bg-gradient-to-b from-slate-950/90 to-slate-900/80 backdrop-blur-lg sticky top-0 z-50 shadow-[0_8px_30px_-12px_rgba(251,146,60,0.25)]">
 
         {/* Top Bar */}
         <div className="flex items-center justify-between px-6 py-4">
@@ -114,11 +129,11 @@ const Header = () => {
           id="mobile-menu"
         >
           <ul className="flex flex-col px-6 pb-6 space-y-4">
-            {navitems.map((item) => (
+            {(loggedIn ? authedNavitems : navitems).map((item) => (
               <li key={item.href}>
                 <Link
                   to={item.href}
-                  className="block text-lg font-medium hover:text-amber-400 transition"
+                  className="block bg-gradient-to-r from-amber-300 via-orange-300 to-fuchsia-300 bg-clip-text text-lg font-medium text-transparent transition hover:opacity-75"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.name}
@@ -130,22 +145,25 @@ const Header = () => {
             {!loggedIn ? (<Button
               variant="default"
               size="lg"
-              className="mt-4 w-full bg-amber-400 text-black hover:bg-amber-300"
+              className="mt-4 w-full bg-gradient-to-r from-amber-400 via-orange-400 to-fuchsia-500 text-gray-950 hover:from-amber-300 hover:via-orange-300 hover:to-fuchsia-400"
               onClick={() => {
                 navigate('/auth');
                 setIsMobileMenuOpen(false);
               }}
             >
-              Sign Up
+              Sign In
             </Button>) : (
               <Button
-              variant="default"
-              size="lg"
-              className="mt-4 w-full bg-amber-400 text-black hover:bg-amber-300"
-              onClick={()=>(console.log("Logged out"))}
-            >
-           Hello User
-            </Button>
+                variant="default"
+                size="lg"
+                className="mt-4 w-full bg-gradient-to-r from-amber-400 via-orange-400 to-fuchsia-500 text-gray-950 hover:from-amber-300 hover:via-orange-300 hover:to-fuchsia-400"
+                onClick={() => {
+                  handleLogout();
+                  setIsMobileMenuOpen(false);
+                }}
+              >
+                Sign Out
+              </Button>
             )}
 
 
