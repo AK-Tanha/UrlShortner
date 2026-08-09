@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils"
 
 const ADMIN_PANEL_URL = import.meta.env.VITE_ADMIN_URL || "http://localhost:5174"
 
-const getShortUrl = (shortCode) => `${window.location.origin}/${shortCode}`
+const getShortUrl = (shortCode) => `${import.meta.env.VITE_SHORT_URL || import.meta.env.VITE_API_URL || window.location.origin}/${shortCode}`
 
 const DashboardPage = () => {
   const { user, logout } = useAuth()

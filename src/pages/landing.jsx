@@ -34,7 +34,7 @@ const LandingPage = () => {
     setError("");
     try {
       const url = await api.post("/urls", { originalUrl: longurl });
-      setShortUrl(`${window.location.origin}/${url.shortCode}`);
+      setShortUrl(`${import.meta.env.VITE_SHORT_URL || import.meta.env.VITE_API_URL || window.location.origin}/${url.shortCode}`);
     } catch (err) {
       setError(err.message || "Failed to shorten URL");
     } finally {

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { api } from "@/lib/api-client"
 import { cn } from "@/lib/utils"
 
-const getShortUrl = (shortCode) => `${window.location.origin}/${shortCode}`
+const getShortUrl = (shortCode) => `${import.meta.env.VITE_SHORT_URL || import.meta.env.VITE_API_URL || window.location.origin}/${shortCode}`
 
 const LinkPage = () => {
   const { id } = useParams()
