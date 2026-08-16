@@ -71,7 +71,7 @@ const LandingPage = () => {
         <section className="w-full rounded-4xl border border-white/10 bg-gradient-to-br from-slate-900/80 to-slate-950/70 px-5 py-8 shadow-2xl shadow-black/40 ring-1 ring-amber-400/5 backdrop-blur-xl sm:px-8">
           <div className="mx-auto flex w-full max-w-3xl flex-col items-center gap-4 text-center">
             <h1 className="bg-gradient-to-r from-amber-300 via-orange-400 to-fuchsia-400 bg-clip-text text-3xl font-bold tracking-tight text-transparent sm:text-4xl">
-              Welcome to the Landing Page
+              Welcome to the URL Shortner
             </h1>
             <h2 className="text-base font-semibold text-gray-300 sm:text-xl">Paste your URL to get started</h2>
             <div className="w-full rounded-3xl bg-slate-900/90 p-4 shadow-lg shadow-black/20 ring-1 ring-white/10">

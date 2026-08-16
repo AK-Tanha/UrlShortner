@@ -67,7 +67,10 @@ const Header = () => {
     <>
       <nav className="hidden md:flex items-center justify-between border-b border-amber-400/20 bg-gradient-to-r from-slate-950/80 via-slate-900/70 to-slate-950/80 px-6 py-4 shadow-[0_8px_30px_-12px_rgba(251,146,60,0.25)] backdrop-blur-xl sm:px-8 lg:px-10">
         <Link to="/" className="flex items-center">
-          {logo}
+          {logo}{" "}
+          <span className="bg-gradient-to-r from-amber-300 via-orange-300 to-fuchsia-300 bg-clip-text text-xl font-bold tracking-tight text-transparent">
+            URL Shortner
+          </span>
         </Link>
         <ul className="flex items-center gap-6">
           {(loggedIn ? authedNavitems : navitems).map((item) => (
